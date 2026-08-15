@@ -1,0 +1,105 @@
+{
+  "_note": "PLACEHOLDER DATA. Replace these entries with Kun Foods' real recipes. Each recipe needs: id, name, category, tags (used for search), description, servings, ingredients, instructions. This file is read fresh on every query, so edits take effect without restarting the server.",
+  "recipes": [
+    {
+      "id": "chicken-karahi",
+      "name": "Chicken Karahi",
+      "category": "Main Course",
+      "tags": ["chicken", "karahi", "spicy", "tomato", "main course", "pakistani"],
+      "description": "A classic Pakistani chicken curry cooked in a wok-style karahi with tomatoes, ginger, and green chilies.",
+      "servings": 4,
+      "ingredients": [
+        "1 kg chicken, cut into pieces",
+        "4 medium tomatoes, chopped",
+        "1/2 cup cooking oil",
+        "2 tbsp ginger-garlic paste",
+        "4-5 green chilies",
+        "1 tsp red chili powder",
+        "1 tsp coriander powder",
+        "Salt to taste",
+        "Fresh coriander and ginger julienne for garnish"
+      ],
+      "instructions": [
+        "Heat oil in a karahi and add chicken, cooking on high heat until it changes color.",
+        "Add ginger-garlic paste and cook for 2 minutes.",
+        "Add chopped tomatoes, salt, and spices; cook until tomatoes break down and oil separates.",
+        "Add green chilies, cover, and simmer until chicken is tender.",
+        "Garnish with coriander and ginger, serve hot with naan or roti."
+      ]
+    },
+    {
+      "id": "daal-chawal",
+      "name": "Daal Chawal",
+      "category": "Main Course",
+      "tags": ["daal", "lentils", "rice", "vegetarian", "comfort food", "pakistani"],
+      "description": "Simple everyday lentil curry served with steamed rice.",
+      "servings": 4,
+      "ingredients": [
+        "1 cup yellow lentils (masoor or chana daal)",
+        "1 onion, sliced",
+        "2 tomatoes, chopped",
+        "1 tbsp ginger-garlic paste",
+        "1/2 tsp turmeric",
+        "1 tsp cumin seeds",
+        "2 tbsp oil or ghee",
+        "Salt to taste",
+        "2 cups basmati rice, cooked"
+      ],
+      "instructions": [
+        "Boil lentils with turmeric and salt until soft.",
+        "In a separate pan, heat oil and fry cumin seeds, then onions until golden.",
+        "Add ginger-garlic paste and tomatoes, cook until soft.",
+        "Pour this tempering into the boiled lentils and simmer for 5 minutes.",
+        "Serve hot with steamed basmati rice."
+      ]
+    },
+    {
+      "id": "beef-nihari",
+      "name": "Beef Nihari",
+      "category": "Main Course",
+      "tags": ["beef", "nihari", "stew", "slow cooked", "spicy", "pakistani"],
+      "description": "A slow-cooked, richly spiced beef stew traditionally eaten for breakfast.",
+      "servings": 6,
+      "ingredients": [
+        "1 kg beef shank, cubed",
+        "1/2 cup oil",
+        "2 onions, sliced",
+        "3 tbsp nihari masala",
+        "3 tbsp whole wheat flour (for thickening)",
+        "Ginger julienne, lemon, and coriander for garnish"
+      ],
+      "instructions": [
+        "Fry sliced onions in oil until golden brown, then set aside.",
+        "In the same oil, sear the beef, add nihari masala, and cook for a few minutes.",
+        "Add water to cover the meat and simmer on low heat for 3-4 hours until tender.",
+        "Mix wheat flour with water to make a slurry, stir into the stew to thicken.",
+        "Top with fried onions, ginger, coriander, and a squeeze of lemon before serving."
+      ]
+    },
+    {
+      "id": "vegetable-biryani",
+      "name": "Vegetable Biryani",
+      "category": "Rice",
+      "tags": ["biryani", "rice", "vegetarian", "vegetables", "pakistani"],
+      "description": "Fragrant layered rice dish cooked with mixed vegetables and biryani spices.",
+      "servings": 5,
+      "ingredients": [
+        "2 cups basmati rice, soaked",
+        "2 cups mixed vegetables (carrots, peas, potatoes, beans)",
+        "1 cup yogurt",
+        "2 onions, fried and sliced",
+        "2 tbsp biryani masala",
+        "Whole spices (bay leaf, cardamom, cinnamon)",
+        "Fresh mint and coriander leaves",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Parboil the rice with whole spices and salt until 70% cooked, then drain.",
+        "Cook mixed vegetables with yogurt, biryani masala, and half the fried onions until tender.",
+        "Layer the vegetable mixture and rice alternately in a pot, topping with mint, coriander, and remaining fried onions.",
+        "Cover tightly and cook on low heat (dum) for 20-25 minutes.",
+        "Gently mix before serving."
+      ]
+    }
+  ]
+}
