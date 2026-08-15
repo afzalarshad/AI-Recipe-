@@ -1,6 +1,6 @@
 import { Router } from "express";
 import type { MealPlanPreferences } from "../types.js";
-import { generateMealPlan } from "../services/anthropic.js";
+import { generateMealPlan, regenerateMeal } from "../services/anthropic.js";
 
 export const mealPlanRouter = Router();
 
@@ -50,5 +50,20 @@ mealPlanRouter.post("/generate", async (req, res) => {
   } catch (err) {
     console.error("Failed to generate meal plan:", err);
     res.status(502).json({ error: "Failed to generate meal plan. Please try again." });
+  }
+});
+
+mealPlanRouter.post("/regenerate-meal", async (req, res) => {
+  try {
+    const body = (req.body ?? {}) as Record<string, unknown>;
+    const preferences = parsePreferences(body.preferences);
+    const mealType = typeof body.mealType === "string" && body.mealType.trim() ? body.mealType.trim() : "Meal";
+    const excludeNames = toStringArray(body.excludeNames);
+
+    const meal = await regenerateMeal(preferences, mealType, excludeNames);
+    res.json({ meal, mode: process.env.ANTHROPIC_API_KEY ? "ai" : "mock" });
+  } catch (err) {
+    console.error("Failed to regenerate meal:", err);
+    res.status(502).json({ error: "Failed to regenerate meal. Please try again." });
   }
 });

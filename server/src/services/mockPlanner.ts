@@ -70,6 +70,39 @@ export function generateMockPlan(prefs: MealPlanPreferences): MealPlan {
   };
 }
 
+/**
+ * Offline fallback for regenerating a single meal (used when swapping a meal
+ * the user doesn't like, or when no ANTHROPIC_API_KEY is configured).
+ */
+export function regenerateMockMeal(prefs: MealPlanPreferences, mealType: string, excludeNames: string[]): Meal {
+  const type = MEAL_TYPES.includes(mealType) ? mealType : MEAL_TYPES[0];
+  // Names may carry a "(diet type)" suffix (e.g. "Oatmeal Bowl (vegetarian)"), so compare by
+  // whether the excluded name starts with the candidate's base name rather than an exact match.
+  const excludeLower = excludeNames.map((n) => n.toLowerCase());
+  const candidates = BASE_MEALS[type] ?? BASE_MEALS.Breakfast;
+  const choice =
+    candidates.find((c) => !excludeLower.some((n) => n.startsWith(c.toLowerCase()))) ?? pick(candidates, Date.now());
+
+  const perMealCalories = Math.round(prefs.calorieTarget / prefs.mealsPerDay);
+  const ingredients = mockIngredients(type, prefs);
+
+  return {
+    type,
+    name: `${choice}${prefs.dietType !== "none" ? ` (${prefs.dietType})` : ""}`,
+    description: `A ${prefs.dietType !== "none" ? prefs.dietType + " " : ""}${type.toLowerCase()} option tailored to your preferences.`,
+    calories: perMealCalories,
+    protein: Math.round((perMealCalories * 0.25) / 4),
+    carbs: Math.round((perMealCalories * 0.45) / 4),
+    fat: Math.round((perMealCalories * 0.3) / 9),
+    ingredients: ingredients.map((i) => `${i.quantity} ${i.item}`),
+    instructions: [
+      "Prep and wash all ingredients.",
+      "Cook proteins and vegetables as needed.",
+      "Combine, season to taste, and serve.",
+    ],
+  };
+}
+
 function mockIngredients(type: string, prefs: MealPlanPreferences): ShoppingListItem[] {
   const base: Record<string, ShoppingListItem[]> = {
     Breakfast: [

@@ -17,6 +17,22 @@ in the comments.
   first, with sample positive comments shown per result.
 - **Works without API keys** — both features fall back to a deterministic
   offline/mock mode so the app is fully demoable with zero setup.
+- **Servings converter** — every recipe has a servings stepper that scales
+  ingredient quantities and calories/macros proportionally, so a recipe
+  sized for 2 can be converted to feed 6 (or scaled down to 1) instantly.
+- **Swap a meal** — don't like a suggestion? Regenerate just that one meal
+  (via Claude, or the offline generator) without touching the rest of the
+  plan.
+- **Favorites** — star any meal to save it to a dedicated Favorites tab,
+  persisted across sessions.
+- **Interactive shopping list** — check off items as you shop; progress and
+  checked state persist across reloads.
+- **Daily nutrition summary** — each day shows total calories against your
+  target plus a macro breakdown.
+- **YouTube → plan** — add a YouTube search result directly into a chosen
+  day of your meal plan.
+- **Persistent state** — your preferences, generated plan, favorites, and
+  shopping progress are saved to `localStorage` and restored on reload.
 
 ## Stack
 

@@ -15,18 +15,19 @@ const DIET_OPTIONS: { value: DietType; label: string }[] = [
 interface Props {
   onSubmit: (preferences: MealPlanPreferences) => void;
   loading: boolean;
+  initial?: MealPlanPreferences;
 }
 
-export function PreferencesForm({ onSubmit, loading }: Props) {
-  const [days, setDays] = useState(7);
-  const [mealsPerDay, setMealsPerDay] = useState(3);
-  const [dietType, setDietType] = useState<DietType>("none");
-  const [calorieTarget, setCalorieTarget] = useState(2000);
-  const [servings, setServings] = useState(2);
-  const [allergies, setAllergies] = useState("");
-  const [dislikedIngredients, setDislikedIngredients] = useState("");
-  const [cuisinePreferences, setCuisinePreferences] = useState("");
-  const [notes, setNotes] = useState("");
+export function PreferencesForm({ onSubmit, loading, initial }: Props) {
+  const [days, setDays] = useState(initial?.days ?? 7);
+  const [mealsPerDay, setMealsPerDay] = useState(initial?.mealsPerDay ?? 3);
+  const [dietType, setDietType] = useState<DietType>(initial?.dietType ?? "none");
+  const [calorieTarget, setCalorieTarget] = useState(initial?.calorieTarget ?? 2000);
+  const [servings, setServings] = useState(initial?.servings ?? 2);
+  const [allergies, setAllergies] = useState(initial?.allergies.join(", ") ?? "");
+  const [dislikedIngredients, setDislikedIngredients] = useState(initial?.dislikedIngredients.join(", ") ?? "");
+  const [cuisinePreferences, setCuisinePreferences] = useState(initial?.cuisinePreferences.join(", ") ?? "");
+  const [notes, setNotes] = useState(initial?.notes ?? "");
 
   function toList(value: string): string[] {
     return value

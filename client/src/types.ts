@@ -32,6 +32,11 @@ export interface Meal {
   instructions: string[];
 }
 
+export interface FavoriteMeal extends Meal {
+  day: string;
+  savedAt: string;
+}
+
 export interface DayPlan {
   day: string;
   meals: Meal[];
