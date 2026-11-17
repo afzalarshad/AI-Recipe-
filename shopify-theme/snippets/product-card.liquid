@@ -1,0 +1,44 @@
+{%- comment -%}
+  Product card with hover image swap and quick add.
+  Usage: {% render 'product-card', product: product, show_quantity: true, sizes: '...' %}
+{%- endcomment -%}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign subtitle = product.metafields.custom.subtitle.value | default: variant.title
+  if product.has_only_default_variant
+    assign subtitle = product.metafields.custom.subtitle.value
+  endif
+  assign sizes = sizes | default: '(min-width: 990px) 25vw, 50vw'
+-%}
+<article class="card">
+  <a class="card__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+    {%- if product.featured_media -%}
+      {{ product.featured_media | image_url: width: 800 | image_tag: loading: 'lazy', sizes: sizes, widths: '300, 450, 600, 800', class: 'card__img card__img--primary', alt: product.featured_media.alt | default: product.title }}
+      {%- if product.media.size > 1 -%}
+        {{ product.media[1] | image_url: width: 800 | image_tag: loading: 'lazy', sizes: sizes, widths: '300, 450, 600, 800', class: 'card__img card__img--secondary', alt: '' }}
+      {%- endif -%}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
+    {%- endif -%}
+    {%- if variant.compare_at_price > variant.price -%}
+      {%- assign off = variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price | append: '%' -%}
+      <span class="badge badge--sale">{{ 'products.save' | t: amount: off }}</span>
+    {%- endif -%}
+  </a>
+  <div class="card__body">
+    <h3 class="card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+    {%- if subtitle != blank -%}<p class="card__subtitle">{{ subtitle }}</p>{%- endif -%}
+    {% render 'price', product: product, show_from: true %}
+  </div>
+  {%- if product.available -%}
+    <form class="card__form" action="{{ routes.cart_add_url }}" method="post" data-ajax-cart>
+      <input type="hidden" name="id" value="{{ variant.id }}">
+      {%- if show_quantity -%}
+        {% render 'quantity-input', id: product.id %}
+      {%- endif -%}
+      <button type="submit" class="button button--full">{{ 'products.add_to_cart' | t }}</button>
+    </form>
+  {%- else -%}
+    <button type="button" class="button button--full" disabled>{{ 'products.sold_out' | t }}</button>
+  {%- endif -%}
+</article>

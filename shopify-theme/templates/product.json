@@ -1,0 +1,48 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": { "type": "title" },
+        "rating": { "type": "rating" },
+        "description": { "type": "description" },
+        "variants": { "type": "variant_picker", "settings": { "show_swatch_images": true } },
+        "tier-1": { "type": "bundle_tier", "settings": { "label": "1 pack", "quantity": 1, "discount": 0 } },
+        "tier-2": { "type": "bundle_tier", "settings": { "label": "2 packs", "quantity": 2, "discount": 10, "badge": "Save 10%", "perk": "" } },
+        "tier-4": { "type": "bundle_tier", "settings": { "label": "4 packs", "quantity": 4, "discount": 20, "badge": "Best value", "perk": "Free delivery" } },
+        "buy": { "type": "buy_buttons", "settings": { "show_dynamic_checkout": false } },
+        "trust-1": { "type": "trust", "settings": { "icon": "shield", "title": "Love it or your money back", "text": "Not happy? Message us within 30 days for a full refund." } },
+        "trust-2": { "type": "trust", "settings": { "icon": "truck", "title": "Free delivery over Rs. 5,000", "text": "Most orders arrive in 2–4 working days." } },
+        "ingredients": { "type": "collapsible", "settings": { "heading": "Ingredients", "source": "ingredients" } },
+        "how": { "type": "collapsible", "settings": { "heading": "How to cook", "source": "how_to_cook" } }
+      },
+      "block_order": ["title", "rating", "description", "variants", "tier-1", "tier-2", "tier-4", "buy", "trust-1", "trust-2", "ingredients", "how"]
+    },
+    "benefits": {
+      "type": "icon-benefits",
+      "blocks": {
+        "a": { "type": "benefit", "settings": { "icon": "clock", "title": "Quick to cook", "text": "From pack to plate in about 20 minutes." } },
+        "b": { "type": "benefit", "settings": { "icon": "leaf", "title": "Real ingredients", "text": "Whole spices, ground and blended. Nothing artificial." } },
+        "c": { "type": "benefit", "settings": { "icon": "chili", "title": "Authentic taste", "text": "Recipes perfected in Pakistani home kitchens." } },
+        "d": { "type": "benefit", "settings": { "icon": "chat", "title": "Recipe help", "text": "Message our WhatsApp bot for step-by-step recipes." } }
+      },
+      "block_order": ["a", "b", "c", "d"],
+      "settings": { "color_scheme": "surface" }
+    },
+    "recipes": {
+      "type": "featured-recipes",
+      "settings": { "heading": "Recipes to try", "limit": 3, "view_all_label": "All recipes" }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": { "type": "question", "settings": { "question": "How long does a pack keep?", "answer": "<p>Unopened packs keep for 12 months in a cool, dry place.</p>" } },
+        "q2": { "type": "question", "settings": { "question": "How spicy is it?", "answer": "<p>Each pack shows a heat level. Use less mix for a milder dish.</p>" } },
+        "q3": { "type": "question", "settings": { "question": "Where do you deliver?", "answer": "<p>We deliver nationwide. Orders usually arrive in 2–4 working days.</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3"],
+      "settings": { "heading": "Questions? We've got answers", "link_label": "See all FAQs" }
+    }
+  },
+  "order": ["main", "benefits", "recipes", "faq"]
+}

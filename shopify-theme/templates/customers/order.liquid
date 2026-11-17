@@ -1,0 +1,30 @@
+<section class="section">
+  <div class="page-width">
+    <a class="link" href="{{ routes.account_url }}">← {{ 'customer.account' | t }}</a>
+    <h1 class="h1">{{ 'customer.order' | t }} {{ order.name }}</h1>
+    <p>{{ order.created_at | time_tag: format: 'date_at_time' }}</p>
+    <table class="table">
+      <thead><tr><th>{{ 'customer.product' | t }}</th><th>{{ 'customer.price' | t }}</th><th>{{ 'products.quantity' | t }}</th><th>{{ 'customer.total' | t }}</th></tr></thead>
+      <tbody>
+        {%- for item in order.line_items -%}
+          <tr>
+            <td>{{ item.title | link_to: item.product.url }}</td>
+            <td>{{ item.final_price | money }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.final_line_price | money }}</td>
+          </tr>
+        {%- endfor -%}
+      </tbody>
+      <tfoot>
+        <tr><td colspan="3">{{ 'customer.subtotal' | t }}</td><td>{{ order.line_items_subtotal_price | money }}</td></tr>
+        {%- for shipping in order.shipping_methods -%}<tr><td colspan="3">{{ shipping.title }}</td><td>{{ shipping.price | money }}</td></tr>{%- endfor -%}
+        {%- for tax in order.tax_lines -%}<tr><td colspan="3">{{ tax.title }}</td><td>{{ tax.price | money }}</td></tr>{%- endfor -%}
+        <tr><td colspan="3"><strong>{{ 'customer.total' | t }}</strong></td><td><strong>{{ order.total_price | money_with_currency }}</strong></td></tr>
+      </tfoot>
+    </table>
+    <div class="account-grid">
+      <div><h2 class="h3">{{ 'customer.shipping_address' | t }}</h2>{{ order.shipping_address | format_address }}</div>
+      <div><h2 class="h3">{{ 'customer.billing_address' | t }}</h2>{{ order.billing_address | format_address }}</div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,99 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {
+        "t1": { "type": "tagline", "settings": { "text": "Ghar jaisa zaiqa." } },
+        "t2": { "type": "tagline", "settings": { "text": "No preservatives. Just real spices." } },
+        "t3": { "type": "tagline", "settings": { "text": "Dinner sorted in 20 minutes." } }
+      },
+      "block_order": ["t1", "t2", "t3"],
+      "settings": {
+        "height": "large",
+        "alignment": "center",
+        "overlay": 35,
+        "eyebrow": "Kun Foods",
+        "heading": "Real Pakistani flavour, ready in minutes",
+        "interval": 3,
+        "button_label": "Shop now"
+      }
+    },
+    "feature-1": {
+      "type": "image-with-text",
+      "blocks": {
+        "b1": { "type": "badge", "settings": { "icon": "leaf", "label": "No preservatives" } },
+        "b2": { "type": "badge", "settings": { "icon": "clock", "label": "Ready in 20 min" } },
+        "b3": { "type": "badge", "settings": { "icon": "chili", "label": "Authentic heat" } },
+        "b4": { "type": "badge", "settings": { "icon": "shield", "label": "Halal" } },
+        "b5": { "type": "badge", "settings": { "icon": "wheat-off", "label": "Gluten free" } },
+        "b6": { "type": "badge", "settings": { "icon": "pot", "label": "Serves 4–6" } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "b5", "b6"],
+      "settings": {
+        "image_position": "left",
+        "color_scheme": "default",
+        "eyebrow": "Masala mixes",
+        "heading": "Masala mixes, done right",
+        "text": "<p>Hand-blended spice mixes for karahi, biryani, nihari and more. Add your meat or veg, follow the pack, and dinner tastes like it took all afternoon.</p>",
+        "button_label": "Shop masalas"
+      }
+    },
+    "feature-2": {
+      "type": "image-with-text",
+      "blocks": {
+        "b1": { "type": "badge", "settings": { "icon": "pot", "label": "Heat & eat" } },
+        "b2": { "type": "badge", "settings": { "icon": "clock", "label": "5-minute meals" } },
+        "b3": { "type": "badge", "settings": { "icon": "leaf", "label": "Real ingredients" } },
+        "b4": { "type": "badge", "settings": { "icon": "shield", "label": "Halal" } },
+        "b5": { "type": "badge", "settings": { "icon": "globe", "label": "Ships nationwide" } },
+        "b6": { "type": "badge", "settings": { "icon": "heart", "label": "Family recipes" } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "b5", "b6"],
+      "settings": {
+        "image_position": "right",
+        "color_scheme": "surface",
+        "eyebrow": "Ready meals",
+        "heading": "Home cooking, without the hours",
+        "text": "<p>Slow-cooked classics, packed fresh. Heat, plate, and enjoy a proper meal on the busiest weeknight.</p>",
+        "button_label": "Shop ready meals"
+      }
+    },
+    "shop-all": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "Shop all",
+        "subheading": "Buy 2 or more and save 10%. Buy 4 or more and save 20%. No code needed.",
+        "limit": 10,
+        "columns": 5,
+        "show_quantity": true,
+        "show_view_all": true,
+        "view_all_label": "View all"
+      }
+    },
+    "reviews": {
+      "type": "video-reviews",
+      "blocks": {
+        "r1": { "type": "review", "settings": { "quote": "Tastes exactly like my mother's karahi.", "author": "Customer name" } },
+        "r2": { "type": "review", "settings": { "quote": "Biryani night is now every Friday.", "author": "Customer name" } },
+        "r3": { "type": "review", "settings": { "quote": "Perfect heat, perfect aroma.", "author": "Customer name" } },
+        "r4": { "type": "review", "settings": { "quote": "My kids ask for the nihari every week.", "author": "Customer name" } },
+        "r5": { "type": "review", "settings": { "quote": "So easy, and it really tastes homemade.", "author": "Customer name" } }
+      },
+      "block_order": ["r1", "r2", "r3", "r4", "r5"],
+      "settings": { "rating": "4.9", "heading": "Loved in kitchens across Pakistan", "subheading": "Real customers, real dinners." }
+    },
+    "recipes": {
+      "type": "featured-recipes",
+      "settings": { "heading": "Cook with Kun Foods", "limit": 3, "view_all_label": "All recipes" }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "color_scheme": "accent",
+        "heading": "Get 15% off your first order",
+        "text": "<p>Join the Kun Foods family for new recipes, launches and member-only offers.</p>"
+      }
+    }
+  },
+  "order": ["hero", "feature-1", "feature-2", "shop-all", "reviews", "recipes", "newsletter"]
+}

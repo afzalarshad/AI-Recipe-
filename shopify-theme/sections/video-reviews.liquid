@@ -1,0 +1,61 @@
+<section class="section section--surface">
+  <div class="page-width">
+    <div class="section__header">
+      <div class="rating" aria-label="{{ section.settings.rating }} / 5">
+        {%- for i in (1..5) -%}{% render 'icon', name: 'star' %}{%- endfor -%}
+      </div>
+      {%- if section.settings.heading != blank -%}<h2 class="h2">{{ section.settings.heading }}</h2>{%- endif -%}
+      {%- if section.settings.subheading != blank -%}<p class="section__sub">{{ section.settings.subheading }}</p>{%- endif -%}
+    </div>
+    <ul class="reviews scroller">
+      {%- for block in section.blocks -%}
+        <li class="review" {{ block.shopify_attributes }}>
+          <div class="review__media">
+            {%- if block.settings.video != blank -%}
+              <video-player class="review__video">
+                {{ block.settings.video | video_tag: loop: true, muted: true, playsinline: true, preload: 'none', image_size: '600x' }}
+                <button type="button" class="review__play" aria-label="Play">{% render 'icon', name: 'play' %}</button>
+              </video-player>
+            {%- elsif block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', sizes: '280px' }}
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder' }}
+            {%- endif -%}
+          </div>
+          {%- if block.settings.quote != blank -%}<p class="review__quote">&ldquo;{{ block.settings.quote }}&rdquo;</p>{%- endif -%}
+          {%- if block.settings.author != blank -%}<p class="review__author">{{ block.settings.author }}</p>{%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Video reviews",
+  "max_blocks": 10,
+  "settings": [
+    { "type": "text", "id": "rating", "label": "Average rating", "default": "4.9" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Loved in kitchens across Pakistan" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Real customers, real dinners." }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "video", "id": "video", "label": "Video", "info": "Short vertical clip. Plays on tap." },
+        { "type": "image_picker", "id": "image", "label": "Image (if no video)" },
+        { "type": "text", "id": "quote", "label": "Quote", "default": "Tastes exactly like my mother's karahi." },
+        { "type": "text", "id": "author", "label": "Name", "default": "Customer name" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video reviews",
+      "blocks": [ { "type": "review" }, { "type": "review" }, { "type": "review" }, { "type": "review" }, { "type": "review" } ]
+    }
+  ]
+}
+{% endschema %}

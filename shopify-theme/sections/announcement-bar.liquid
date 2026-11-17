@@ -1,0 +1,49 @@
+{%- if section.blocks.size > 0 -%}
+<div class="announcement" role="region" aria-label="Announcements" {{ section.shopify_attributes }}>
+  <div class="announcement__track{% if section.settings.scroll %} announcement__track--scroll{% endif %}" style="--speed: {{ section.settings.speed }}s;">
+    {%- assign loops = 1 -%}
+    {%- if section.settings.scroll -%}{%- assign loops = 2 -%}{%- endif -%}
+    {%- for i in (1..loops) -%}
+      <div class="announcement__group"{% if forloop.index > 1 %} aria-hidden="true"{% endif %}>
+        {%- for block in section.blocks -%}
+          <p class="announcement__item" {{ block.shopify_attributes }}>
+            {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{{ block.settings.text }}</a>{%- else -%}{{ block.settings.text }}{%- endif -%}
+          </p>
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "class": "section-announcement",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "checkbox", "id": "scroll", "label": "Scroll messages continuously", "default": true },
+    { "type": "range", "id": "speed", "label": "Scroll duration", "unit": "s", "min": 10, "max": 60, "step": 5, "default": 30 }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Free delivery on orders over Rs. 5,000" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar",
+      "blocks": [
+        { "type": "message", "settings": { "text": "Free delivery on orders over Rs. 5,000" } },
+        { "type": "message", "settings": { "text": "Buy 2+ packs, save 10% · Buy 4+, save 20% — no code needed" } },
+        { "type": "message", "settings": { "text": "Ask our WhatsApp recipe bot what to cook tonight" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

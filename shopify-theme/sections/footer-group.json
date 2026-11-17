@@ -1,0 +1,17 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "about": { "type": "text", "settings": { "heading": "Kun Foods", "text": "<p>Authentic Pakistani flavour, ready in minutes. Real spices, no shortcuts.</p>" } },
+        "shop": { "type": "menu", "settings": { "heading": "Shop", "menu": "footer" } },
+        "help": { "type": "menu", "settings": { "heading": "Help", "menu": "footer" } }
+      },
+      "block_order": ["about", "shop", "help"],
+      "settings": { "copyright": "Made with love in Pakistan." }
+    }
+  },
+  "order": ["footer"]
+}

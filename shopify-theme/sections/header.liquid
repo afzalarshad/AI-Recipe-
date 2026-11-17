@@ -1,0 +1,91 @@
+{%- assign menu = section.settings.menu -%}
+<header class="header" data-sticky="{{ section.settings.sticky }}">
+  <div class="header__inner page-width">
+    <details class="drawer header__drawer">
+      <summary class="icon-button" aria-label="{{ 'general.menu' | t }}">
+        <span class="drawer__open">{% render 'icon', name: 'menu' %}</span>
+        <span class="drawer__close">{% render 'icon', name: 'close' %}</span>
+      </summary>
+      <nav class="drawer__panel" aria-label="{{ 'general.menu' | t }}">
+        <ul class="drawer__list">
+          {%- for link in menu.links -%}
+            <li>
+              {%- if link.links != blank -%}
+                <details class="drawer__group">
+                  <summary>{{ link.title }} {% render 'icon', name: 'chevron' %}</summary>
+                  <ul>
+                    {%- for child in link.links -%}
+                      <li><a href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>{{ child.title }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                </details>
+              {%- else -%}
+                <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+          {%- if shop.customer_accounts_enabled -%}
+            <li><a href="{{ routes.account_url }}">{{ 'general.account' | t }}</a></li>
+          {%- endif -%}
+        </ul>
+      </nav>
+    </details>
+
+    <a href="{{ routes.root_url }}" class="header__logo" style="--logo-width: {{ settings.logo_width }}px;">
+      {%- if settings.logo != blank -%}
+        {%- assign logo_sizes = settings.logo_width | append: 'px' -%}
+        {{ settings.logo | image_url: width: 520 | image_tag: alt: shop.name, widths: '260, 520', sizes: logo_sizes, loading: 'eager' }}
+      {%- else -%}
+        <span class="header__wordmark">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="header__nav" aria-label="{{ 'general.menu' | t }}">
+      <ul class="nav">
+        {%- for link in menu.links -%}
+          <li class="nav__item">
+            {%- if link.links != blank -%}
+              <details class="nav__dropdown">
+                <summary class="nav__link">{{ link.title }} {% render 'icon', name: 'chevron' %}</summary>
+                <ul class="nav__menu">
+                  {%- for child in link.links -%}
+                    <li><a href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>{{ child.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              </details>
+            {%- else -%}
+              <a class="nav__link" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="header__icons">
+      {%- if section.settings.utility_link != blank and section.settings.utility_label != blank -%}
+        <a class="header__utility" href="{{ section.settings.utility_link }}">{{ section.settings.utility_label }}</a>
+      {%- endif -%}
+      <a href="{{ routes.search_url }}" class="icon-button" aria-label="{{ 'general.search' | t }}">{% render 'icon', name: 'search' %}</a>
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="icon-button header__account" aria-label="{{ 'general.account' | t }}">{% render 'icon', name: 'account' %}</a>
+      {%- endif -%}
+      <a href="{{ routes.cart_url }}" class="icon-button header__cart" aria-label="{{ 'general.cart' | t }}">
+        {% render 'icon', name: 'cart' %}
+        <span class="cart-count" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu", "info": "Add child links under a menu item to create a dropdown, e.g. Shop → Masalas, Ready Mixes; Learn → Our Story, Recipes, FAQs." },
+    { "type": "checkbox", "id": "sticky", "label": "Stick to top on scroll", "default": true },
+    { "type": "text", "id": "utility_label", "label": "Utility link label", "default": "Find a store" },
+    { "type": "url", "id": "utility_link", "label": "Utility link" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,24 @@
+{
+  "current": "Default",
+  "presets": {
+    "Default": {
+      "color_background": "#FBF6EE",
+      "color_surface": "#FFFFFF",
+      "color_text": "#221A14",
+      "color_accent": "#9E2B1B",
+      "color_accent_text": "#FFFFFF",
+      "color_highlight": "#E3A33B",
+      "color_dark": "#2A1D15",
+      "color_dark_text": "#FBF6EE",
+      "color_sale": "#2F6B3A",
+      "type_heading_font": "assistant_n4",
+      "type_body_font": "assistant_n4",
+      "heading_scale": 100,
+      "page_width": 1320,
+      "radius": 12,
+      "button_radius": 40,
+      "logo_width": 140,
+      "cart_behavior": "toast"
+    }
+  }
+}

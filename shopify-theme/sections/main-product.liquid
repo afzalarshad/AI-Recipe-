@@ -1,0 +1,270 @@
+{%- liquid
+  assign current = product.selected_or_first_available_variant
+  assign featured = current.featured_media | default: product.featured_media
+  assign tiers = section.blocks | where: 'type', 'bundle_tier'
+-%}
+<section class="section product-section">
+  <product-form class="page-width product" data-section="{{ section.id }}">
+    <div class="product__gallery gallery">
+      <div class="gallery__main">
+        {%- for media in product.media -%}
+          <div class="gallery__slide{% if media.id == featured.id %} is-active{% endif %}" data-media-id="{{ media.id }}">
+            {%- case media.media_type -%}
+              {%- when 'image' -%}
+                {{ media | image_url: width: 1400 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 55vw, 100vw', widths: '500, 750, 1000, 1400' }}
+              {%- when 'video' -%}
+                {{ media | video_tag: controls: true, playsinline: true, image_size: '1000x' }}
+              {%- when 'external_video' -%}
+                {{ media | external_video_tag }}
+              {%- else -%}
+                {{ media | media_tag }}
+            {%- endcase -%}
+          </div>
+        {%- else -%}
+          <div class="gallery__slide is-active">{{ 'product-1' | placeholder_svg_tag: 'placeholder' }}</div>
+        {%- endfor -%}
+      </div>
+      {%- if product.media.size > 1 -%}
+        <ul class="gallery__thumbs scroller" aria-label="Gallery">
+          {%- for media in product.media -%}
+            <li>
+              <button type="button" class="gallery__thumb{% if media.id == featured.id %} is-active{% endif %}" data-thumb="{{ media.id }}" aria-label="{{ media.alt | default: product.title | escape }}">
+                {{ media.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    <div class="product__info">
+      {%- assign form_id = 'ProductForm-' | append: section.id -%}
+      {%- form 'product', product, id: form_id, class: 'product__form', data-ajax-cart: '' -%}
+        <input type="hidden" name="id" value="{{ current.id }}" data-variant-id>
+
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'title' -%}
+              <div {{ block.shopify_attributes }}>
+                <h1 class="product__title h2">{{ product.title }}</h1>
+                {%- if product.metafields.custom.subtitle != blank -%}
+                  <p class="product__subtitle">{{ product.metafields.custom.subtitle.value }}</p>
+                {%- endif -%}
+              </div>
+
+            {%- when 'rating' -%}
+              {%- if product.metafields.reviews.rating.value != blank -%}
+                <div class="rating rating--inline" {{ block.shopify_attributes }}>
+                  {%- for i in (1..5) -%}{% render 'icon', name: 'star' %}{%- endfor -%}
+                  <span>{{ product.metafields.reviews.rating.value.rating | round: 1 }} ({{ product.metafields.reviews.rating_count }})</span>
+                </div>
+              {%- endif -%}
+
+            {%- when 'description' -%}
+              {%- if product.description != blank -%}
+                <div class="rte product__description" {{ block.shopify_attributes }}>{{ product.description }}</div>
+              {%- endif -%}
+
+            {%- when 'variant_picker' -%}
+              {%- unless product.has_only_default_variant -%}
+                <div class="variant-picker" {{ block.shopify_attributes }}>
+                  {%- for option in product.options_with_values -%}
+                    {%- assign option_index = forloop.index0 -%}
+                    <fieldset class="chips">
+                      <legend class="label">{{ option.name }}: <span data-option-label="{{ option_index }}">{{ option.selected_value }}</span></legend>
+                      {%- for value in option.values -%}
+                        <input type="radio" class="visually-hidden" id="Opt-{{ section.id }}-{{ option_index }}-{{ forloop.index0 }}"
+                          name="option-{{ option_index }}" value="{{ value | escape }}" data-option-index="{{ option_index }}"
+                          {% if option.selected_value == value %}checked{% endif %}>
+                        <label class="chip" for="Opt-{{ section.id }}-{{ option_index }}-{{ forloop.index0 }}">
+                          {%- if block.settings.show_swatch_images and value.variant.featured_media -%}
+                            {{ value.variant.featured_media | image_url: width: 80 | image_tag: loading: 'lazy', alt: '', class: 'chip__img' }}
+                          {%- endif -%}
+                          {{ value }}
+                        </label>
+                      {%- endfor -%}
+                    </fieldset>
+                  {%- endfor -%}
+                  <script type="application/json" data-variants>
+                    {{ product.variants | json }}
+                  </script>
+                </div>
+              {%- endunless -%}
+
+            {%- when 'price' -%}
+              <div class="product__price" {{ block.shopify_attributes }}>
+                {% render 'price', product: product, variant: current %}
+              </div>
+
+            {%- when 'buy_buttons' -%}
+              <div class="buy" {{ block.shopify_attributes }}>
+                {%- if tiers.size > 0 -%}
+                  <fieldset class="tiers" data-tiers>
+                    <legend class="label">{{ 'products.choose_bundle' | t }}</legend>
+                    {%- for tier in tiers -%}
+                      {%- liquid
+                        assign qty = tier.settings.quantity
+                        assign pct = tier.settings.discount
+                        assign pct_left = 100 | minus: pct
+                        assign unit = current.price | times: pct_left | divided_by: 100.0 | round
+                        assign full = current.price | times: qty
+                        assign total = unit | times: qty
+                        assign unit_money = unit | money
+                      -%}
+                      <input type="radio" class="visually-hidden" name="tier" id="Tier-{{ tier.id }}" value="{{ qty }}"
+                        data-discount="{{ pct }}" {% if forloop.first %}checked{% endif %}>
+                      <label class="tier" for="Tier-{{ tier.id }}" {{ tier.shopify_attributes }}>
+                        <span class="tier__head">
+                          <span class="tier__title">{{ tier.settings.label }}</span>
+                          {%- if tier.settings.badge != blank -%}<span class="badge">{{ tier.settings.badge }}</span>{%- endif -%}
+                        </span>
+                        {%- if tier.settings.perk != blank -%}<span class="tier__perk">{{ tier.settings.perk }}</span>{%- endif -%}
+                        <span class="tier__price">
+                          <strong data-tier-total>{{ total | money }}</strong>
+                          {%- if pct > 0 -%}<s data-tier-full>{{ full | money }}</s>{%- endif -%}
+                          <span class="tier__unit" data-tier-unit data-template="{{ 'products.per_unit' | t: price: '__PRICE__' | escape }}">{{ 'products.per_unit' | t: price: unit_money }}</span>
+                        </span>
+                      </label>
+                    {%- endfor -%}
+                  </fieldset>
+                  <input type="hidden" name="quantity" value="{{ tiers.first.settings.quantity }}" data-tier-quantity>
+                {%- else -%}
+                  <div class="field">
+                    <span class="label">{{ 'products.quantity' | t }}</span>
+                    {% render 'quantity-input', id: section.id %}
+                  </div>
+                {%- endif -%}
+
+                {%- if product.selling_plan_groups.size > 0 -%}
+                  {%- assign group = product.selling_plan_groups.first -%}
+                  <fieldset class="purchase-options" data-purchase-options>
+                    {%- unless product.requires_selling_plan -%}
+                      <label class="option">
+                        <input type="radio" name="purchase_type" value="once" checked>
+                        <span>{{ 'products.one_time' | t }}</span>
+                      </label>
+                    {%- endunless -%}
+                    <label class="option">
+                      <input type="radio" name="purchase_type" value="subscribe" {% if product.requires_selling_plan %}checked{% endif %}>
+                      <span>
+                        {%- if group.name != blank -%}{{ group.name }}{%- else -%}{{ 'products.subscribe' | t }}{%- endif -%}
+                        {%- assign adj = group.selling_plans.first.price_adjustments.first -%}
+                        {%- if adj.value_type == 'percentage' and adj.value > 0 -%}
+                          {%- assign pct_label = adj.value | append: '%' %} <span class="badge badge--save">{{ 'products.save' | t: amount: pct_label }}</span>
+                        {%- endif -%}
+                      </span>
+                    </label>
+                    <select name="selling_plan" class="input select" aria-label="{{ 'products.subscribe' | t }}" data-selling-plan {% unless product.requires_selling_plan %}disabled{% endunless %}>
+                      {%- for plan in group.selling_plans -%}
+                        <option value="{{ plan.id }}">{{ plan.name }}</option>
+                      {%- endfor -%}
+                    </select>
+                  </fieldset>
+                {%- endif -%}
+
+                <button type="submit" name="add" class="button button--full button--large" data-add-button {% unless current.available %}disabled{% endunless %}>
+                  {%- if current.available -%}{{ 'products.add_to_cart' | t }}{%- else -%}{{ 'products.sold_out' | t }}{%- endif -%}
+                </button>
+                {%- if block.settings.show_dynamic_checkout -%}{{ form | payment_button }}{%- endif -%}
+              </div>
+
+            {%- when 'trust' -%}
+              <div class="trust" {{ block.shopify_attributes }}>
+                <span class="trust__icon">{% render 'icon', name: block.settings.icon %}</span>
+                <div>
+                  <p class="trust__title">{{ block.settings.title }}</p>
+                  {%- if block.settings.text != blank -%}<p class="trust__text">{{ block.settings.text }}</p>{%- endif -%}
+                </div>
+              </div>
+
+            {%- when 'collapsible' -%}
+              {%- liquid
+                assign mf = blank
+                if block.settings.source == 'ingredients'
+                  assign mf = product.metafields.custom.ingredients
+                elsif block.settings.source == 'how_to_cook'
+                  assign mf = product.metafields.custom.how_to_cook
+                endif
+              -%}
+              {%- if mf != blank or block.settings.content != blank or block.settings.page != blank -%}
+                <details class="accordion__item" {{ block.shopify_attributes }}>
+                  <summary>{{ block.settings.heading }} {% render 'icon', name: 'plus' %}</summary>
+                  <div class="rte accordion__body">
+                    {%- if mf != blank -%}{{ mf | metafield_tag }}{%- endif -%}
+                    {{ block.settings.content }}
+                    {%- if block.settings.page != blank -%}{{ block.settings.page.content }}{%- endif -%}
+                  </div>
+                </details>
+              {%- endif -%}
+          {%- endcase -%}
+        {%- endfor -%}
+      {%- endform -%}
+    </div>
+  </product-form>
+</section>
+
+{% schema %}
+{
+  "name": "Product information",
+  "blocks": [
+    { "type": "title", "name": "Title", "limit": 1 },
+    { "type": "rating", "name": "Rating", "limit": 1 },
+    { "type": "description", "name": "Description", "limit": 1 },
+    {
+      "type": "variant_picker", "name": "Flavour picker", "limit": 1,
+      "settings": [ { "type": "checkbox", "id": "show_swatch_images", "label": "Show variant image on each option", "default": true } ]
+    },
+    { "type": "price", "name": "Price", "limit": 1 },
+    {
+      "type": "bundle_tier", "name": "Bundle tier", "limit": 4,
+      "settings": [
+        { "type": "paragraph", "content": "Tiers set the quantity added to cart and show the saving. The actual discount must be set up in Shopify admin → Discounts as an automatic discount with a minimum quantity." },
+        { "type": "text", "id": "label", "label": "Label", "default": "1 pack" },
+        { "type": "range", "id": "quantity", "label": "Quantity", "min": 1, "max": 12, "step": 1, "default": 1 },
+        { "type": "range", "id": "discount", "label": "Discount shown", "unit": "%", "min": 0, "max": 50, "step": 5, "default": 0 },
+        { "type": "text", "id": "badge", "label": "Badge", "info": "e.g. Most popular" },
+        { "type": "text", "id": "perk", "label": "Perk", "info": "e.g. Free delivery" }
+      ]
+    },
+    {
+      "type": "buy_buttons", "name": "Buy buttons", "limit": 1,
+      "settings": [ { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show dynamic checkout buttons", "default": false } ]
+    },
+    {
+      "type": "trust", "name": "Trust badge",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icon",
+          "options": [
+            { "value": "shield", "label": "Shield" },
+            { "value": "truck", "label": "Delivery" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "chat", "label": "Chat" },
+            { "value": "gift", "label": "Gift" }
+          ],
+          "default": "shield"
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "Love it or your money back" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Not happy? Message us within 30 days for a full refund." }
+      ]
+    },
+    {
+      "type": "collapsible", "name": "Collapsible tab",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Ingredients" },
+        {
+          "type": "select", "id": "source", "label": "Content source",
+          "options": [
+            { "value": "custom", "label": "Text below" },
+            { "value": "ingredients", "label": "Product metafield: custom.ingredients" },
+            { "value": "how_to_cook", "label": "Product metafield: custom.how_to_cook" }
+          ],
+          "default": "custom"
+        },
+        { "type": "richtext", "id": "content", "label": "Text" },
+        { "type": "page", "id": "page", "label": "Or show a page" }
+      ]
+    }
+  ]
+}
+{% endschema %}

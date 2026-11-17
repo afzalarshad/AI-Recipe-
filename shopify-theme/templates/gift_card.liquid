@@ -1,0 +1,26 @@
+{%- layout none -%}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{ 'gift_card.title' | t }} &ndash; {{ shop.name }}</title>
+    {% render 'css-variables' %}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ content_for_header }}
+  </head>
+  <body>
+    <main class="section">
+      <div class="page-width page-width--narrow text-center">
+        <p class="eyebrow">{{ shop.name }}</p>
+        <h1 class="h1">{{ gift_card.initial_value | money }}</h1>
+        <p>{{ 'gift_card.title' | t }}</p>
+        {%- if gift_card.balance != gift_card.initial_value -%}<p>Balance: {{ gift_card.balance | money }}</p>{%- endif -%}
+        <p class="gift-code">{{ gift_card.code | format_code }}</p>
+        <p>{{ 'gift_card.use' | t }}</p>
+        {%- if gift_card.pass_url -%}<p><a href="{{ gift_card.pass_url }}">Add to Apple Wallet</a></p>{%- endif -%}
+        <a class="button" href="{{ shop.url }}">{{ 'gift_card.shop' | t }}</a>
+      </div>
+    </main>
+  </body>
+</html>

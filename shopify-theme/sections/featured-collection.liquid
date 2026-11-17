@@ -1,0 +1,46 @@
+{%- assign collection = section.settings.collection -%}
+<section class="section">
+  <div class="page-width">
+    <div class="section__header">
+      {%- if section.settings.heading != blank -%}<h2 class="h2">{{ section.settings.heading }}</h2>{%- endif -%}
+      {%- if section.settings.subheading != blank -%}<p class="section__sub">{{ section.settings.subheading }}</p>{%- endif -%}
+    </div>
+    {%- assign cols = section.settings.columns -%}
+    <ul class="grid" style="--cols: {{ cols }};">
+      {%- if collection != blank and collection.products_count > 0 -%}
+        {%- for product in collection.products limit: section.settings.limit -%}
+          <li>{% render 'product-card', product: product, show_quantity: section.settings.show_quantity %}</li>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..cols) -%}
+          <li>
+            <article class="card">
+              <div class="card__media">{{ 'product-' | append: i | placeholder_svg_tag: 'placeholder' }}</div>
+              <div class="card__body"><h3 class="card__title">Masala mix</h3><div class="price">Rs. 450</div></div>
+            </article>
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+    {%- if section.settings.show_view_all and collection != blank -%}
+      <div class="section__footer"><a class="button button--outline" href="{{ collection.url }}">{{ section.settings.view_all_label }}</a></div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop all" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Buy 2 or more and save 10%. Buy 4 or more and save 20%. No code needed." },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "limit", "label": "Products to show", "min": 2, "max": 20, "step": 1, "default": 10 },
+    { "type": "range", "id": "columns", "label": "Columns on desktop", "min": 2, "max": 5, "step": 1, "default": 5 },
+    { "type": "checkbox", "id": "show_quantity", "label": "Show quantity selector", "default": true },
+    { "type": "checkbox", "id": "show_view_all", "label": "Show 'view all' button", "default": true },
+    { "type": "text", "id": "view_all_label", "label": "'View all' label", "default": "View all" }
+  ],
+  "presets": [ { "name": "Featured collection" } ]
+}
+{% endschema %}

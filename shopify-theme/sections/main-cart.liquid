@@ -1,0 +1,86 @@
+<section class="section">
+  <div class="page-width page-width--narrow">
+    <h1 class="h1">{{ 'cart.title' | t }}</h1>
+
+    {%- if cart.item_count == 0 -%}
+      <p class="empty">{{ 'cart.empty' | t }}</p>
+      <a class="button" href="{{ routes.all_products_collection_url }}">{{ 'cart.continue' | t }}</a>
+    {%- else -%}
+      {%- liquid
+        assign threshold = settings.free_shipping_threshold | plus: 0 | times: 100
+      -%}
+      {%- if threshold > 0 -%}
+        {%- assign remaining = threshold | minus: cart.total_price -%}
+        <div class="shipping-bar">
+          {%- if remaining > 0 -%}
+            {%- assign remaining_money = remaining | money -%}
+            <p>{{ 'cart.free_shipping_remaining' | t: amount: remaining_money }}</p>
+            {%- assign pct = cart.total_price | times: 100 | divided_by: threshold -%}
+          {%- else -%}
+            <p>{{ 'cart.free_shipping_unlocked' | t }}</p>
+            {%- assign pct = 100 -%}
+          {%- endif -%}
+          <div class="shipping-bar__track"><span style="width: {{ pct }}%;"></span></div>
+        </div>
+      {%- endif -%}
+
+      <form action="{{ routes.cart_url }}" method="post" id="CartForm" class="cart">
+        <ul class="cart__items">
+          {%- for item in cart.items -%}
+            <li class="cart-item">
+              <a class="cart-item__media" href="{{ item.url }}">
+                {%- if item.image -%}
+                  {{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: item.title }}
+                {%- endif -%}
+              </a>
+              <div class="cart-item__info">
+                <a class="cart-item__title" href="{{ item.url }}">{{ item.product.title }}</a>
+                {%- unless item.product.has_only_default_variant -%}<p class="cart-item__meta">{{ item.variant.title }}</p>{%- endunless -%}
+                {%- if item.selling_plan_allocation -%}<p class="cart-item__meta">{{ item.selling_plan_allocation.selling_plan.name }}</p>{%- endif -%}
+                {%- for discount in item.line_level_discount_allocations -%}
+                  <p class="cart-item__discount">{{ discount.discount_application.title }} (−{{ discount.amount | money }})</p>
+                {%- endfor -%}
+                <div class="cart-item__actions">
+                  {% render 'quantity-input', id: item.key, value: item.quantity, name: 'updates[]', min: 0 %}
+                  <a class="link" href="{{ item.url_to_remove }}">{{ 'cart.remove' | t }}</a>
+                </div>
+              </div>
+              <div class="cart-item__price">
+                {%- if item.original_line_price > item.final_line_price -%}<s>{{ item.original_line_price | money }}</s>{%- endif -%}
+                <strong>{{ item.final_line_price | money }}</strong>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if section.settings.show_note -%}
+          <div class="field">
+            <label class="label" for="CartNote">{{ 'cart.note' | t }}</label>
+            <textarea class="input" id="CartNote" name="note" rows="3">{{ cart.note }}</textarea>
+          </div>
+        {%- endif -%}
+
+        <div class="cart__summary">
+          {%- for discount in cart.cart_level_discount_applications -%}
+            <p class="cart__row"><span>{{ discount.title }}</span><span>−{{ discount.total_allocated_amount | money }}</span></p>
+          {%- endfor -%}
+          <p class="cart__row cart__total"><span>{{ 'cart.subtotal' | t }}</span><span>{{ cart.total_price | money_with_currency }}</span></p>
+          <p class="cart__taxes">{{ 'cart.taxes' | t }}</p>
+          <div class="cart__buttons">
+            <button type="submit" class="button button--outline" name="update">{{ 'cart.update' | t }}</button>
+            <button type="submit" class="button button--large" name="checkout">{{ 'cart.checkout' | t }}</button>
+          </div>
+        </div>
+      </form>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": [
+    { "type": "checkbox", "id": "show_note", "label": "Show order note", "default": true }
+  ]
+}
+{% endschema %}

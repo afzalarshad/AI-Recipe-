@@ -1,0 +1,21 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "blocks": {
+        "msg-1": { "type": "message", "settings": { "text": "Free delivery on orders over Rs. 5,000" } },
+        "msg-2": { "type": "message", "settings": { "text": "Buy 2+ packs, save 10% · Buy 4+, save 20% — no code needed" } },
+        "msg-3": { "type": "message", "settings": { "text": "Ask our WhatsApp recipe bot what to cook tonight" } }
+      },
+      "block_order": ["msg-1", "msg-2", "msg-3"],
+      "settings": { "scroll": true, "speed": 30 }
+    },
+    "header": {
+      "type": "header",
+      "settings": { "menu": "main-menu", "sticky": true, "utility_label": "Find a store", "utility_link": "" }
+    }
+  },
+  "order": ["announcement", "header"]
+}

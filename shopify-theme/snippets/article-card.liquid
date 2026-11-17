@@ -1,0 +1,28 @@
+{%- liquid
+  assign category = ''
+  assign minutes = ''
+  for tag in article.tags
+    if tag contains 'time:'
+      assign minutes = tag | remove: 'time:' | strip
+    elsif category == ''
+      assign category = tag
+    endif
+  endfor
+-%}
+<article class="article-card">
+  <a class="article-card__media" href="{{ article.url }}" tabindex="-1" aria-hidden="true">
+    {%- if article.image -%}
+      {{ article.image | image_url: width: 800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', widths: '400, 600, 800', alt: article.image.alt | default: article.title }}
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder' }}
+    {%- endif -%}
+  </a>
+  {%- if category != '' or minutes != '' -%}
+    <p class="eyebrow">
+      {{- category -}}
+      {%- if category != '' and minutes != '' %} · {% endif -%}
+      {%- if minutes != '' -%}{{ 'general.minutes' | t: count: minutes }}{%- endif -%}
+    </p>
+  {%- endif -%}
+  <h3 class="article-card__title"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+</article>

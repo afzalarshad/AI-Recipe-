@@ -1,0 +1,66 @@
+{%- paginate collection.products by section.settings.per_page -%}
+<section class="section">
+  <div class="page-width">
+    <div class="collection-header">
+      <h1 class="h1">{{ collection.title }}</h1>
+      {%- if section.settings.show_description and collection.description != blank -%}
+        <div class="rte collection-header__text">{{ collection.description }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="collection-toolbar">
+      {%- if section.settings.shop_by_menu != blank -%}
+        <nav class="chips chips--nav" aria-label="{{ 'collections.shop_by' | t }}">
+          <span class="label">{{ 'collections.shop_by' | t }}</span>
+          {%- for link in section.settings.shop_by_menu.links -%}
+            <a class="chip{% if link.active %} is-active{% endif %}" href="{{ link.url }}"{% if link.active %} aria-current="page"{% endif %}>{{ link.title }}</a>
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+
+      {%- if section.settings.show_sort -%}
+        <form class="sort" method="get">
+          <label class="visually-hidden" for="SortBy">Sort</label>
+          {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+          <select class="input select" id="SortBy" name="sort_by" onchange="this.form.submit()">
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name | escape }}</option>
+            {%- endfor -%}
+          </select>
+          {%- for filter in collection.filters -%}
+            {%- for value in filter.active_values -%}
+              <input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">
+            {%- endfor -%}
+          {%- endfor -%}
+        </form>
+      {%- endif -%}
+    </div>
+
+    {%- if collection.products.size > 0 -%}
+      <ul class="grid" style="--cols: {{ section.settings.columns }};">
+        {%- for product in collection.products -%}
+          <li>{% render 'product-card', product: product, show_quantity: section.settings.show_quantity %}</li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <p class="empty">{{ 'collections.empty' | t }}</p>
+    {%- endif -%}
+
+    {% render 'pagination', paginate: paginate %}
+  </div>
+</section>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Collection grid",
+  "settings": [
+    { "type": "checkbox", "id": "show_description", "label": "Show collection description", "default": true },
+    { "type": "link_list", "id": "shop_by_menu", "label": "'Shop by' menu", "info": "A menu of collection links shown as chips, e.g. Masalas, Ready Mixes, Pickles." },
+    { "type": "checkbox", "id": "show_sort", "label": "Show sorting", "default": true },
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "range", "id": "columns", "label": "Columns on desktop", "min": 2, "max": 5, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "show_quantity", "label": "Show quantity selector", "default": false }
+  ]
+}
+{% endschema %}

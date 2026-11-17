@@ -1,0 +1,29 @@
+{%- paginate blog.articles by 12 -%}
+<section class="section">
+  <div class="page-width">
+    <div class="collection-header">
+      <h1 class="h1">{{ blog.title }}</h1>
+    </div>
+    {%- if blog.all_tags.size > 0 -%}
+      <nav class="chips chips--nav" aria-label="Tags">
+        <a class="chip{% if current_tags == blank %} is-active{% endif %}" href="{{ blog.url }}">{{ 'collections.all' | t }}</a>
+        {%- for tag in blog.all_tags -%}
+          {%- unless tag contains 'time:' -%}
+            <a class="chip{% if current_tags contains tag %} is-active{% endif %}" href="{{ blog.url }}/tagged/{{ tag | handleize }}">{{ tag }}</a>
+          {%- endunless -%}
+        {%- endfor -%}
+      </nav>
+    {%- endif -%}
+    <ul class="grid" style="--cols: 3;">
+      {%- for article in blog.articles -%}
+        <li>{% render 'article-card', article: article %}</li>
+      {%- endfor -%}
+    </ul>
+    {% render 'pagination', paginate: paginate %}
+  </div>
+</section>
+{%- endpaginate -%}
+
+{% schema %}
+{ "name": "Blog posts" }
+{% endschema %}

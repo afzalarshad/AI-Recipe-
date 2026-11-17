@@ -1,0 +1,96 @@
+<section class="section section--{{ section.settings.color_scheme }}">
+  <div class="page-width split{% if section.settings.image_position == 'right' %} split--reverse{% endif %}">
+    <div class="split__media">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 50vw, 100vw', widths: '500, 750, 1000, 1400' }}
+      {%- else -%}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder' }}
+      {%- endif -%}
+    </div>
+    <div class="split__content">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      {%- if section.settings.heading != blank -%}<h2 class="h2">{{ section.settings.heading }}</h2>{%- endif -%}
+      {%- if section.settings.text != blank -%}<div class="rte split__text">{{ section.settings.text }}</div>{%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <ul class="badges">
+          {%- for block in section.blocks -%}
+            <li class="badges__item" {{ block.shopify_attributes }}>
+              <span class="badges__icon">{% render 'icon', name: block.settings.icon %}</span>
+              <span class="badges__label">{{ block.settings.label }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a class="button" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">{{ section.settings.button_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    {
+      "type": "select", "id": "image_position", "label": "Image position",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ],
+      "default": "left"
+    },
+    {
+      "type": "select", "id": "color_scheme", "label": "Background",
+      "options": [
+        { "value": "default", "label": "Page background" },
+        { "value": "surface", "label": "White" },
+        { "value": "dark", "label": "Dark" }
+      ],
+      "default": "default"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Small text above heading" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Masala mixes, done right" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Hand-blended spice mixes for karahi, biryani, nihari and more. Add your meat or veg, follow the pack, and dinner tastes like it took all afternoon.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop now" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Benefit badge",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icon",
+          "options": [
+            { "value": "leaf", "label": "Leaf / natural" },
+            { "value": "flame", "label": "Flame / heat" },
+            { "value": "chili", "label": "Chili" },
+            { "value": "clock", "label": "Clock / quick" },
+            { "value": "pot", "label": "Cooking pot" },
+            { "value": "wheat-off", "label": "Gluten free" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "shield", "label": "Shield / quality" },
+            { "value": "globe", "label": "Globe" },
+            { "value": "check", "label": "Check" }
+          ],
+          "default": "leaf"
+        },
+        { "type": "text", "id": "label", "label": "Label", "default": "No preservatives" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text",
+      "blocks": [
+        { "type": "badge", "settings": { "icon": "leaf", "label": "No preservatives" } },
+        { "type": "badge", "settings": { "icon": "clock", "label": "Ready in 20 min" } },
+        { "type": "badge", "settings": { "icon": "chili", "label": "Authentic heat" } },
+        { "type": "badge", "settings": { "icon": "shield", "label": "Halal" } },
+        { "type": "badge", "settings": { "icon": "wheat-off", "label": "Gluten free" } },
+        { "type": "badge", "settings": { "icon": "pot", "label": "Serves 4–6" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

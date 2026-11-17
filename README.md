@@ -23,3 +23,8 @@ curl -X POST http://localhost:4100/whatsapp/test-query \
   -H "Content-Type: application/json" \
   -d '{"query": "chicken karahi kaise banani hai"}'
 ```
+
+## Shopify theme
+
+A custom Kun Foods Shopify theme lives in [`shopify-theme/`](shopify-theme/).
+See [`shopify-theme/README.md`](shopify-theme/README.md) for install and store setup steps.

@@ -1,0 +1,71 @@
+<footer class="footer">
+  <div class="page-width">
+    <div class="footer__grid">
+      {%- for block in section.blocks -%}
+        <div class="footer__col" {{ block.shopify_attributes }}>
+          {%- case block.type -%}
+            {%- when 'menu' -%}
+              {%- if block.settings.heading != blank -%}<h2 class="footer__heading">{{ block.settings.heading }}</h2>{%- endif -%}
+              <ul class="footer__links">
+                {%- for link in block.settings.menu.links -%}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- when 'text' -%}
+              {%- if block.settings.heading != blank -%}<h2 class="footer__heading">{{ block.settings.heading }}</h2>{%- endif -%}
+              <div class="rte">{{ block.settings.text }}</div>
+          {%- endcase -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="footer__bottom">
+      <ul class="social" aria-label="Social">
+        {%- liquid
+          assign networks = 'facebook,instagram,tiktok,youtube,whatsapp' | split: ','
+        -%}
+        {%- for network in networks -%}
+          {%- assign key = 'social_' | append: network -%}
+          {%- if settings[key] != blank -%}
+            <li><a href="{{ settings[key] }}" class="icon-button" target="_blank" rel="noopener" aria-label="{{ network | capitalize }}">{% render 'icon', name: network %}</a></li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+      <ul class="footer__legal">
+        {%- for policy in shop.policies -%}
+          {%- if policy != blank -%}<li><a href="{{ policy.url }}">{{ policy.title }}</a></li>{%- endif -%}
+        {%- endfor -%}
+      </ul>
+      <p class="footer__copy">&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.copyright }}</p>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "section-footer",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "copyright", "label": "Copyright text", "default": "Made with love in Pakistan." }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Shop" },
+        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Kun Foods" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Authentic Pakistani flavour, ready in minutes.</p>" }
+      ]
+    }
+  ]
+}
+{% endschema %}

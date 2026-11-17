@@ -1,0 +1,50 @@
+<section class="section">
+  <div class="page-width page-width--narrow">
+    {%- if section.settings.heading != blank -%}
+      <div class="section__header"><h2 class="h2">{{ section.settings.heading }}</h2></div>
+    {%- endif -%}
+    <div class="accordion">
+      {%- for block in section.blocks -%}
+        <details class="accordion__item" {{ block.shopify_attributes }}>
+          <summary>{{ block.settings.question }} {% render 'icon', name: 'plus' %}</summary>
+          <div class="rte accordion__body">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+    {%- if section.settings.link_label != blank and section.settings.link != blank -%}
+      <div class="section__footer"><a class="link" href="{{ section.settings.link }}">{{ section.settings.link_label }}</a></div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "max_blocks": 20,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions? We've got answers" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "See all FAQs" },
+    { "type": "url", "id": "link", "label": "Link" }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "How long does a pack keep?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Unopened packs keep for 12 months in a cool, dry place.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        { "type": "question", "settings": { "question": "How long does a pack keep?", "answer": "<p>Unopened packs keep for 12 months in a cool, dry place.</p>" } },
+        { "type": "question", "settings": { "question": "How spicy are the mixes?", "answer": "<p>Each pack shows a heat level. Use less mix for a milder dish.</p>" } },
+        { "type": "question", "settings": { "question": "Where do you deliver?", "answer": "<p>We deliver nationwide. Orders usually arrive in 2–4 working days.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
